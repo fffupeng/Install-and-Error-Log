@@ -1,0 +1,22 @@
+ubuntu系统自带python2.7.可以在此基础上添加其他的python包，但是一个一个添加比较麻烦。
+最常用的python集成包是anaconda，里面包含常用的python三方包，并提供conda命令管理。
+ubuntu下常用anaconda2，对应python2，window下常用anaconda3，对应python3，很多三方包在
+window下都是python3写的。
+
+step 1：下载anaconda：
+    https://www.anaconda.com/download/#linux
+
+step 2：安装anaconda
+    命令行输入 ./Anaconda*
+    在安装的过程中会提示输入是否将anaconda路径添加到~/.bashrc中，选择yes。
+    如果安装的过程中没有提示，则手动将anaconda路径添加到~./bashrc中。
+    sudo gedit ~/.bashrc
+    最后添加export PATH="/home/fp/anaconda2/bin:$PATH"
+    
+    source ~/.bashrc
+    命令行输入python，出现anaconda字样，安装成功。
+    
+    
+python常用IDE有自带的jupyter notebook，spyter，pycharm。
+个人比较喜欢pycharm，有VS的感觉。
+下载地址：http://www.jetbrains.com/pycharm/
