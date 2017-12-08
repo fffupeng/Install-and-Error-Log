@@ -2,3 +2,5 @@ pip换源
 参考网页：https://www.cnblogs.com/gispathfinder/p/6036736.html
 
 pip install tensorflow-gpu -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+豆瓣：http://pypi.douban.com/simple/
