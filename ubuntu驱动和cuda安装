@@ -1,0 +1,36 @@
+step 1：安装准备
+	在bios中禁用fast boot和集显选项
+
+step 2： nvidia驱动，cuda下载
+	在nvidia官网下载显卡对应驱动和cuda
+
+step 3：禁用nouveau，nouveau是开源驱动，在部分机型安装ubuntu时候会自动安装，如果禁用，在可能导致安装nvidia驱动安装错误，或者进入系统时出现彩屏现象
+
+	sudo gedit /etc/modprobe.d/blacklist.conf
+	在文本最后添加：（禁用nouveau第三方驱动，之后也不需要改回来）
+	blacklist nouveau
+	options nouveau modeset=0
+
+	然后执行：sudo update-initramfs -u
+	重启后，执行：lsmod | grep nouveau。如果没有屏幕输出，说明禁用nouveau成功
+
+step 4：安装nvidia驱动
+	关闭lightdm,sudo service lightdm stop,并进入f1控制台
+	sudo chmod 777 NV*
+	sudo ./NV* --no-opengl-files
+	安装完成后输入nvidia-smi，出现显卡信息则成功
+	
+step 5：安装cuda
+	仍然在关闭lightdm的情况下，
+	sudo chmod 777 cuda*
+	sudo ./cuda* --no-opengl-libs
+	注意安装过程中会提示安装显示驱动，选择no，其他一路确定
+	
+step 6:设置cuda环境变量
+	修改/etc/profile文件，在最后加入：
+	
+	export PATH=/usr/local/cuda-8.0/bin:$PATH
+	export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64$LD_LIBRARY_PATH
+	
+	source /etc/profile
+	nvcc –V查看是否安上，也可以编译cuda sample测试cuda是否安装成功。
