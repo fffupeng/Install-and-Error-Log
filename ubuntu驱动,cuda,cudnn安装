@@ -34,3 +34,16 @@ step 6:设置cuda环境变量
 	
 	source /etc/profile
 	nvcc –V查看是否安上，也可以编译cuda sample测试cuda是否安装成功。
+
+step 7:cudnn安装
+	下载cudnn文件，官网https://developer.nvidia.com/rdp/cudnn-download下载cuDNN，要注册NVIDIA账号,注意cudnn版本的cuda版本
+	下载cuDNN后解压
+	cd cuda/include
+	sudo cp cudnn.h /usr/local/cuda/include #复制头文件
+	cd ../lib64
+	sudo rm -rf libcudnn.so libcudnn.so.5    #删除原动态文件
+	sudo ln -s libcudnn.so.5.1.5 libcudnn.so.5  #生成软链接
+	sudo ln -s libcudnn.so.5 libcudnn.so      #生成软链接
+	若需要更换cudnn版本，则替换原来的libcudnn*，并重新软链接。
+	更新链接库：
+	sudo ldconfig
