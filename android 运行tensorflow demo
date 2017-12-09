@@ -1,0 +1,21 @@
+
+1、 retrain inception v3
+python tensorflow/examples/image_retraining/retrain.py   
+下载模型出错，手动设置模型的文件夹
+注意修改retrain.py中的参数，参数比较多，直接修改默认参数比较方便
+
+2、优化模型，去除无用节点
+cd tensorflow/python/tools/
+python strip_unused.py --input_graph=output_graph.pb --output_graph=strip_graph.pb --input_node_names="Mul" --output_node_names="final_result" --input_binary=true
+
+3、修改example/android/src/org/tensorflow/demo/ClassfierActivity.java   参数
+
+4、连接android手机，设置为debug模式
+	sudo  apt-get  install android-tools-adb
+	adb devices
+
+5、编译apk文件,会看到生成三个文件
+	bazel build //tensorflow/examples/android:tensorflow_demo
+
+6、向android手机安装apk
+	adb install -r -g bazel-bin/tensorflow/examples/android/tensorflow_demo.apk
