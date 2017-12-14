@@ -1,0 +1,9 @@
+step 1:
+      git clone --recurse-submodules https://github.com/tensorflow/tensorflow.git
+      如果git出现问题则设置下载代理
+      
+step 2:
+      安装bazel
+      
+step 3:
+      安装SDK,NDK
