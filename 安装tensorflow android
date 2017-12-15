@@ -2,8 +2,21 @@ step 1:
       git clone --recurse-submodules https://github.com/tensorflow/tensorflow.git
       如果git出现问题则设置下载代理
       
-step 2:
-      安装bazel
+step 2:安装bazel
+
+step 3:安装SDK
+      wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
+      tar xvzf android-sdk_r24.4.1-linux.tgz -C ~/tensorflow
+      更新ＳＤＫ并安装ＳＤＫ Tools
+      cd  ~/tensorflow/android-sdk-linux
+      sudo  tools/android  update  sdk --no-ui
       
-step 3:
-      安装SDK,NDK
+step 4:安装ＮＤＫ
+      wget https://dl.google.com/android/repositor/android-ndk-r12b-linux-x86_64.zip 
+      unzip android-ndk-r12b-linux-x86_64.zip -d ~/tensorflow
+      
+      
+ｓｔｅｐ 5:修改ｗｏｒｋｓｐａｃｅ，android_sdk_repository和 android_ndk_repository的内容，设置ＳＤＫ和ＮＤＫ的路径和版本。
+
+
+ｓｔｅｐ　６：运行bazel build //tensorflow/examples/android:tensorflow_demo，生成Ａｐｐ。
