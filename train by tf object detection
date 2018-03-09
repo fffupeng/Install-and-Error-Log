@@ -1,0 +1,80 @@
+http://blog.csdn.net/wc781708249/article/details/78110205
+
+step 1:create tfrecord
+
+    # create tfrecord from pet dataset and voc dataset
+    #incude 2 dataset pet and voc 
+    #https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/preparing_inputs.md
+    1.
+    # From tensorflow/models/research/
+    wget http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar
+    tar -xvf VOCtrainval_11-May-2012.tar
+    python object_detection/dataset_tools/create_pascal_tf_record.py \
+        --label_map_path=object_detection/data/pascal_label_map.pbtxt \
+        --data_dir=VOCdevkit --year=VOC2012 --set=train \
+        --output_path=pascal_train.record
+    python object_detection/dataset_tools/create_pascal_tf_record.py \
+        --label_map_path=object_detection/data/pascal_label_map.pbtxt \
+        --data_dir=VOCdevkit --year=VOC2012 --set=val \
+        --output_path=pascal_val.record
+
+
+    2.
+    # From tensorflow/models/research/
+    wget http://www.robots.ox.ac.uk/~vgg/data/pets/data/images.tar.gz
+    wget http://www.robots.ox.ac.uk/~vgg/data/pets/data/annotations.tar.gz
+    tar -xvf annotations.tar.gz
+    tar -xvf images.tar.gz
+    python object_detection/dataset_tools/create_pet_tf_record.py \
+        --label_map_path=object_detection/data/pet_label_map.pbtxt \
+        --data_dir=`pwd` \
+        --output_dir=`pwd`
+        
+step 2: prepare fold
+    fp@fpc:~/Desktop/tf-od-api$ tree .
+    ├── faster_rcnn_resnet152_pets.config  #copy from object_detection/samples/configs/faster_rcnn_resnet152_pets.config
+    ├── pet_label_map.pbtxt                 #copy from object_detection/data/pet_label_map.pbtxt
+    ├── pet_train_with_masks.record
+    ├── pet_val_with_masks.record
+
+
+step 3:edit train_script.sh in models/research
+    python object_detection/train.py \
+    --logtostderr \
+    --pipeline_config_path='/home/fp/Desktop/tf-od-api/faster_rcnn_resnet152_pets.config' \
+    --train_dir='/home/fp/Desktop/tf-od-api/'
+    
+step 4: train
+    Error:
+        fp@fpc:~/Desktop/tf-model/models/research$ bash train_script.sh
+        INFO:tensorflow:Scale of 0 disables regularizer.
+        INFO:tensorflow:Scale of 0 disables regularizer.
+        Traceback (most recent call last):
+          File "object_detection/train.py", line 167, in <module>
+            tf.app.run()
+          File "/home/fp/anaconda2/lib/python2.7/site-packages/tensorflow/python/platform/app.py", line 48, in run
+            _sys.exit(main(_sys.argv[:1] + flags_passthrough))
+          File "object_detection/train.py", line 163, in main
+            worker_job_name, is_chief, FLAGS.train_dir)
+          File "/home/fp/Desktop/tf-model/models/research/object_detection/trainer.py", line 235, in train
+            train_config.prefetch_queue_capacity, data_augmentation_options)
+          File "/home/fp/Desktop/tf-model/models/research/object_detection/trainer.py", line 59, in create_input_queue
+            tensor_dict = create_tensor_dict_fn()
+          File "object_detection/train.py", line 120, in get_next
+            dataset_builder.build(config)).get_next()
+          File "/home/fp/Desktop/tf-model/models/research/object_detection/builders/dataset_builder.py", line 138, in build
+            label_map_proto_file=label_map_proto_file)
+          File "/home/fp/Desktop/tf-model/models/research/object_detection/data_decoders/tf_example_decoder.py", line 110, in __init__
+            dct_method=dct_method),
+        TypeError: __init__() got an unexpected keyword argument 'dct_method'
+    
+    try: edit tf_example_decoder.py line 110 to remove dct_method=dct_method
+        self.items_to_handlers = {
+        fields.InputDataFields.image:
+            slim_example_decoder.Image(
+                image_key='image/encoded',
+                format_key='image/format',
+                channels=3),
+                #dct_method=dct_method),
+    
+
